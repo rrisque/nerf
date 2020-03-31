@@ -8,7 +8,7 @@ import json
 # Misc utils
 
 img2mse = lambda x, y : tf.reduce_mean(tf.square(x - y))
-mse2psnr = lambda x : -10.*tf.log(x)/tf.log(10.)
+mse2psnr = lambda x : -10.*tf.math.log(x)/tf.math.log(10.)
 to8b = lambda x : (255*np.clip(x,0,1)).astype(np.uint8)
 
     
