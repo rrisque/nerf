@@ -625,8 +625,7 @@ def train():
 
             print(expname, i, psnr.numpy(), loss.numpy(), global_step.numpy())
             print('iter time {:.05f}'.format(dt))
-            # with tf.contrib.summary.record_summaries_every_n_global_steps(args.i_print):
-            with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % N_iters)):
+            with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % args.i_print)):
                 tf.compat.v2.summary.scalar(name='loss', data=loss, step=tf.compat.v1.train.get_or_create_global_step())
                 tf.compat.v2.summary.scalar(name='psnr', data=psnr, step=tf.compat.v1.train.get_or_create_global_step())
                 tf.compat.v2.summary.histogram(name='tran', data=trans,
@@ -636,7 +635,6 @@ def train():
                                                 step=tf.compat.v1.train.get_or_create_global_step())
 
             if i % args.i_img == 0:
-
                 # Log a rendered validation view to Tensorboard
                 img_i = np.random.choice(i_val)
                 target = images[img_i]
@@ -647,7 +645,7 @@ def train():
 
                 psnr = mse2psnr(img2mse(rgb, target))
 
-                with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % N_iters)):
+                with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % args.i_img)):
 
                     tf.compat.v2.summary.image(name='rgb', data=to8b(rgb)[tf.newaxis],
                                                step=tf.compat.v1.train.get_or_create_global_step())
@@ -662,7 +660,7 @@ def train():
                                                step=tf.compat.v1.train.get_or_create_global_step())
 
                 if args.N_importance > 0:
-                    with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % N_iters)):
+                    with tf.compat.v2.summary.record_if(lambda: tf.math.equal(0, global_step % args.N_importance)):
                         tf.compat.v2.summary.image(name='rgb0', data=to8b(extras['rgb0'])[tf.newaxis],
                                                    step=tf.compat.v1.train.get_or_create_global_step())
                         tf.compat.v2.summary.image(name='disp0', data=extras['disp0'][tf.newaxis, ..., tf.newaxis],
